@@ -6,9 +6,7 @@
 
 (cl:in-package #:print-items)
 
-
 ;;; Print items protocol
-;;
 
 (defgeneric print-items (object)
   (:method-combination append)
@@ -18,10 +16,15 @@ representation of OBJECT.
 
 Each method should return a list of items of the form
 
-  ITEM   ::= (KEY VALUE [FORMAT])
-  KEY    ::= any Lisp object
-  VALUE  ::= any Lisp object
-  FORMAT ::= a format string (Default is \"~A\")
+  (KEY VALUE [FORMAT [CONSTRAINT*]]
+
+where
+
+  KEY        ::= any Lisp object
+  VALUE      ::= any Lisp object
+  FORMAT     ::= a format string (Default is \"~A\")
+
+  CONSTRAINT ::= (:before | :after) KEY
 
 When multiple items have `eql' KEYs, items appearing closer to the
 beginning of the item list take precedence. This mechanism can be used
@@ -31,9 +34,7 @@ to replace print items produced by superclasses in subclasses."))
   "Default behavior is to not return any print items for OBJECT."
   nil)
 
-
 ;;; Print items mixin
-;;
 
 (defclass print-items-mixin ()
   ()
@@ -45,22 +46,27 @@ to replace print items produced by superclasses in subclasses."))
     (format stream "~A" (class-name (class-of object)))
     (format-print-items (print-items object) stream)))
 
-
 ;;; Utility functions
-;;
 
-(defun format-print-items (items stream)
+(defun format-print-items (items stream &optional colon? at?)
   "Print ITEMS onto STREAM.
 
-ITEMS is a list of items of the form ITEM where
+ITEMS is a list of items of the form
 
-  ITEM   ::= (KEY VALUE [FORMAT])
-  KEY    ::= any Lisp object
-  VALUE  ::= any Lisp object
-  FORMAT ::= a format string (Default is \"~A\")"
-  (loop for (key value . rest) in (remove-duplicates items
-                                                     :key      #'first
-                                                     :from-end t)
-     do (let ((format (first rest)))
-          (format stream " ~A " key)
-          (format stream (or format "~A") value))))
+  (KEY VALUE [FORMAT [CONSTRAINT*]]
+
+where
+
+  KEY        ::= any Lisp object
+  VALUE      ::= any Lisp object
+  FORMAT     ::= a format string (Default is \"~A\")
+
+  CONSTRAINT ::= (:before | :after) KEY"
+  (declare (ignore colon? at?))
+  (mapc (lambda+ ((&ign value &optional format &ign))
+          (format stream (or format "~A") value))
+        (sort-with-partial-order
+         (remove-duplicates items
+                            :key      #'first
+                            :from-end t)
+         #'item-<)))
