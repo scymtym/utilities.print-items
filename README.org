@@ -6,9 +6,70 @@
 #+LANGUAGE:    en
 
 * Introduction
+  The =print-items= system provides a protocol for flexible and
+  composable printing, primarily unreadably printing.
 
+  Why is this needed/useful? Common Lisp has the generic function
+  =cl:print-object=, which is often used to print compact and useful,
+  yet unreadable representations of objects. Thanks to CLOS,
+  considerable flexibility and composability would, in principle, be
+  achievable. However, a common idiom is
 
-* Settings :noexport:
+  #+BEGIN_SRC: lisp
+  (defmethod print-object ((object CLASS) stream)
+    (print-unreadable-object (stream :type t :id t)
+      CODE))
+  #+END_SRC:
+
+  which prevents CLOS' flexibility from actually being used.
+
+  The =print-items= provides the following protocol for composable
+  printing:
+
+  * =print-items:print-items OBJECT [generic function]=
+
+    Return a list of items that should appear in the printed
+    representation of =OBJECT=.
+
+    Each method should return a list of items of the form
+
+    #+BEGIN_EXAMPLE:
+   (KEY VALUE [FORMAT [CONSTRAINT*]]
+    #+END_EXAMPLE:
+
+    where
+
+    #+BEGIN_EXAMPLE:
+    KEY        ::= any Lisp object
+    VALUE      ::= any Lisp object
+    FORMAT     ::= a format string (Default is \"~A\")
+
+    CONSTRAINT ::= (:before | :after) KEY
+    #+END_EXAMPLE:
+
+    When multiple items have =cl:eql= =KEY= s, items appearing closer
+    to the beginning of the item list take precedence. This mechanism
+    can be used to replace print items produced by superclasses in
+    subclasses.
+
+  * =print-items:print-items-mixin [class]=
+
+    This mixin class adds printing via =print-items= to classes.
+
+    Subclasses can define methods on =print-items:print-items= to
+    change or extend the printed representation.
+
+  * =print-items:format-print-items ITEMS STREAM &optional COLON? AT? [function]=
+
+    This utility function print items in the format constructed by the
+    =print-items= functions to a streams.
+
+    It is used to implement the =cl:print-object= method for
+    =print-items-mixin=.
+
+* TODO Tutorial
+
+* Settings                                                         :noexport:
 
 #+OPTIONS: H:2 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
