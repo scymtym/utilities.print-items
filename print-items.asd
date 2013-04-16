@@ -60,13 +60,13 @@ conjunction with support functions and macros."
   :version     #.(version/string)
   :license     "LLGPLv3; see COPYING file for details."
   :description "Unit tests for the cl-print-items system."
-  :depends-on  (:print-items
-                :lift)
+  :depends-on  ((:version :print-items #.(version/string))
+                :eos)
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
-                              (:file       "conditions")
-                              (:file       "macros")))))
+                              (:file       "protocol")))))
 
-(defmethod perform ((op test-op) (component (eql (find-system :print-items-test))))
-  (funcall (find-symbol "RUN-TESTS" :lift) :config :generic))
+(defmethod perform ((operation test-op)
+                    (component (eql (find-system :print-items-test))))
+  (funcall (find-symbol "RUN-TESTS" :print-items.test)))
