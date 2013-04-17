@@ -50,7 +50,9 @@ conjunction with support functions and macros."
                  :serial     t
                  :components ((:file       "package")
                               (:file       "util")
-                              (:file       "protocol"))))
+                              (:file       "protocol")))
+
+                (:static-file "README.org"))
 
   :in-order-to ((test-op (test-op :utilities.print-items-test))))
 
