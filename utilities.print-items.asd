@@ -1,10 +1,10 @@
-;;;; print-items.asd --- System definition for print-items.
+;;;; utilities.print-items.asd --- System definition for utilities.print-items.
 ;;;;
 ;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage #:print-items-system
+(cl:defpackage #:utilities.print-items-system
   (:use
    #:cl
    #:asdf)
@@ -13,7 +13,7 @@
    #:version/list
    #:version/string))
 
-(cl:in-package #:print-items-system)
+(cl:in-package #:utilities.print-items-system)
 
 ;;; Version stuff
 
@@ -36,7 +36,7 @@
 
 ;;; System definition
 
-(defsystem :print-items
+(defsystem :utilities.print-items
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
@@ -52,15 +52,15 @@ conjunction with support functions and macros."
                               (:file       "util")
                               (:file       "protocol"))))
 
-  :in-order-to ((test-op (test-op :print-items-test))))
+  :in-order-to ((test-op (test-op :utilities.print-items-test))))
 
-(defsystem :print-items-test
+(defsystem :utilities.print-items-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
   :license     "LLGPLv3; see COPYING file for details."
   :description "Unit tests for the cl-print-items system."
-  :depends-on  ((:version :print-items #.(version/string))
+  :depends-on  ((:version :utilities.print-items #.(version/string))
                 :eos)
   :components  ((:module     "test"
                  :serial     t
@@ -68,5 +68,5 @@ conjunction with support functions and macros."
                               (:file       "protocol")))))
 
 (defmethod perform ((operation test-op)
-                    (component (eql (find-system :print-items-test))))
+                    (component (eql (find-system :utilities.print-items-test))))
   (funcall (find-symbol "RUN-TESTS" :print-items.test)))

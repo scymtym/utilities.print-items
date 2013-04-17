@@ -1,4 +1,4 @@
-;;;; package.lisp --- Package definition unit tests of the print-items system.
+;;;; package.lisp --- Package definition unit tests of the utilities.print-items system.
 ;;;;
 ;;;; Copyright (C) 2013 Jan Moringen
 ;;;;
@@ -18,11 +18,12 @@
    #:run-tests)
 
   (:documentation
-   "This package contains unit tests for the print-items system."))
+   "This package contains unit tests for the utilities.print-items
+system."))
 
 (cl:in-package #:print-items.test)
 
-(eos:def-suite print-items)
+(eos:def-suite utilities.print-items)
 
 (defun run-tests ()
-  (eos:run! 'print-items))
+  (eos:run! 'utilities.print-items))

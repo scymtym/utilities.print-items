@@ -1,4 +1,4 @@
-;;;; protocol.lisp --- Protocol functions of the print-items system.
+;;;; protocol.lisp --- Protocol functions of the utilities.print-items system.
 ;;;;
 ;;;; Copyright (C) 2011, 2012, 2013 Jan Moringen
 ;;;;

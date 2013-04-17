@@ -1,4 +1,4 @@
-;;;; package.lisp --- Package definition unit tests of the print-items system.
+;;;; package.lisp --- Package definition unit tests of the utilities.print-items system.
 ;;;;
 ;;;; Copyright (C) 2013 Jan Moringen
 ;;;;
@@ -6,7 +6,7 @@
 
 (cl:in-package #:print-items.test)
 
-(in-suite print-items)
+(in-suite utilities.print-items)
 
 (test smoke
   (mapc

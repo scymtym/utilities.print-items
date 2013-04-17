@@ -1,4 +1,4 @@
-;;;; util.lisp --- Utilities used by the print-items system.
+;;;; util.lisp --- Utilities used by the utilities.print-items system.
 ;;;;
 ;;;; Copyright (C) 2013 Jan Moringen
 ;;;;
