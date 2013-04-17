@@ -23,8 +23,8 @@
 
   which prevents CLOS' flexibility from actually being used.
 
-  The =utilities.print-items= provides the following protocol for
-  composable printing:
+  The =utilities.print-items= system provides the following protocol
+  for composable printing:
 
   * =print-items:print-items OBJECT [generic function]=
 
@@ -59,10 +59,10 @@
     Subclasses can define methods on =print-items:print-items= to
     change or extend the printed representation.
 
-  * =print-items:format-print-items ITEMS STREAM &optional COLON? AT? [function]=
+  * =print-items:format-print-items STREAM ITEMS &optional COLON? AT? [function]=
 
-    This utility function print items in the format constructed by the
-    =print-items= functions to a streams.
+    This utility function prints items in the format constructed by
+    the =print-items= functions to a streams.
 
     It is used to implement the =cl:print-object= method for
     =print-items-mixin=.

@@ -12,7 +12,7 @@
   (mapc
    (curry #'apply (lambda (input expected)
                     (is (string= (with-output-to-string (stream)
-                                   (format-print-items input stream))
+                                   (format-print-items stream input))
                                  expected))))
 
    '((((:foo 1))                               "1")

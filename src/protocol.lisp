@@ -44,11 +44,11 @@ to replace print items produced by superclasses in subclasses."))
 (defmethod print-object ((object print-items-mixin) stream)
   (print-unreadable-object (object stream :identity t)
     (format stream "~A" (class-name (class-of object)))
-    (format-print-items (print-items object) stream)))
+    (format-print-items stream (print-items object))))
 
 ;;; Utility functions
 
-(defun format-print-items (items stream &optional colon? at?)
+(defun format-print-items (stream items &optional colon? at?)
   "Print ITEMS onto STREAM.
 
 ITEMS is a list of items of the form
