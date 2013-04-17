@@ -17,13 +17,13 @@
 
 ;;; Version stuff
 
-(defconstant +version-major+ 0
+(defparameter +version-major+ 0
   "Major component of version number.")
 
-(defconstant +version-minor+ 1
+(defparameter +version-minor+ 1
   "Minor component of version number.")
 
-(defconstant +version-revision+ 0
+(defparameter +version-revision+ 0
   "Revision component of version number.")
 
 (defun version/list ()
