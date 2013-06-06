@@ -1,8 +1,8 @@
 #+TITLE:       utilities.print-items README
 #+AUTHOR:      Jan Moringen
 #+EMAIL:       jmoringe@techfak.uni-bielefeld.de
-#+DESCRIPTION: print-items, composable printing, print-object, utilities
-#+KEYWORDS:
+#+DESCRIPTION: Composable, unreadable printing of objects
+#+KEYWORDS:    print-items, composable printing, print-object, utilities
 #+LANGUAGE:    en
 
 * Introduction
