@@ -1,4 +1,4 @@
-;;;; package.lisp --- Package definition unit tests of the utilities.print-items system.
+;;;; protocol.lisp --- Tests for protocol functions of the utilities.print-items system.
 ;;;;
 ;;;; Copyright (C) 2013 Jan Moringen
 ;;;;
@@ -8,12 +8,14 @@
 
 (in-suite utilities.print-items)
 
-(test smoke
+(test format-print-items.smoke
+  "Smoke test for the `format-print-items' function."
+
   (mapc
-   (curry #'apply (lambda (input expected)
-                    (is (string= (with-output-to-string (stream)
-                                   (format-print-items stream input))
-                                 expected))))
+   (lambda+ ((input expected))
+     (is (string= (with-output-to-string (stream)
+                    (format-print-items stream input))
+                  expected)))
 
    '((((:foo 1))                               "1")
 
