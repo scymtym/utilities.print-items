@@ -25,15 +25,18 @@
 
   (:documentation
    "This package contains the utilities.print-items system for
-composable printing. The interface consists of
+    composable printing. The interface consists of
 
-* `print-items'                     [generic function]
-  Methods extend the printed representation of an object in a
-  composable manner.
+    * `print-items'                     [generic function]
 
-* `print-items-mixin'               [class]
-  Can be used to make subclasses the print items mechanism when passed
-  to `print-object'.
+      Methods extend the printed representation of an object in a
+      composable manner.
 
-* `format-print-items'              [function]
-  Utility function for formatting print items onto a stream."))
+    * `print-items-mixin'               [class]
+
+      Can be used to make subclasses the print items mechanism when
+      passed to `print-object'.
+
+    * `format-print-items'              [function]
+
+      Utility function for formatting print items onto a stream."))

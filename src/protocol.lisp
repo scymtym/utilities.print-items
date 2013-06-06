@@ -12,23 +12,24 @@
   (:method-combination append)
   (:documentation
    "Return a list of items that should appear in the printed
-representation of OBJECT.
+    representation of OBJECT.
 
-Each method should return a list of items of the form
+    Each method should return a list of items of the form
 
-  (KEY VALUE [FORMAT [CONSTRAINT*]]
+      (KEY VALUE [FORMAT [CONSTRAINT*]]
 
-where
+    where
 
-  KEY        ::= any Lisp object
-  VALUE      ::= any Lisp object
-  FORMAT     ::= a format string (Default is \"~A\")
+      KEY        ::= any Lisp object
+      VALUE      ::= any Lisp object
+      FORMAT     ::= a format string (Default is \"~A\")
 
-  CONSTRAINT ::= (:before | :after) KEY
+      CONSTRAINT ::= (:before | :after) KEY
 
-When multiple items have `eql' KEYs, items appearing closer to the
-beginning of the item list take precedence. This mechanism can be used
-to replace print items produced by superclasses in subclasses."))
+    When multiple items have `eql' KEYs, items appearing closer to the
+    beginning of the item list take precedence. This mechanism can be
+    used to replace print items produced by superclasses in
+    subclasses."))
 
 (defmethod print-items append ((object t))
   "Default behavior is to not return any print items for OBJECT."
@@ -51,17 +52,17 @@ to replace print items produced by superclasses in subclasses."))
 (defun format-print-items (stream items &optional colon? at?)
   "Print ITEMS onto STREAM.
 
-ITEMS is a list of items of the form
+   ITEMS is a list of items of the form
 
-  (KEY VALUE [FORMAT [CONSTRAINT*]]
+     (KEY VALUE [FORMAT [CONSTRAINT*]]
 
-where
+   where
 
-  KEY        ::= any Lisp object
-  VALUE      ::= any Lisp object
-  FORMAT     ::= a format string (Default is \"~A\")
+     KEY        ::= any Lisp object
+     VALUE      ::= any Lisp object
+     FORMAT     ::= a format string (Default is \"~A\")
 
-  CONSTRAINT ::= (:before | :after) KEY"
+     CONSTRAINT ::= (:before | :after) KEY"
   (declare (ignore colon? at?))
   (mapc (lambda+ ((&ign value &optional format &ign))
           (format stream (or format "~A") value))
