@@ -44,8 +44,9 @@
 
 (defmethod print-object ((object print-items-mixin) stream)
   (print-unreadable-object (object stream :identity t)
-    (format stream "~A" (class-name (class-of object)))
-    (format-print-items stream (print-items object))))
+    (format stream "~A~@[ ~/print-items:format-print-items/~]"
+            (class-name (class-of object))
+            (print-items object))))
 
 ;;; Utility functions
 
