@@ -7,7 +7,7 @@
 
 * Introduction
   The =utilities.print-items= system provides a protocol for flexible
-  and composable printing, primarily unreadably printing.
+  and composable printing, primarily unreadable printing.
 
   Why is this needed/useful? Common Lisp has the generic function
   =cl:print-object=, which is often used to print compact and useful,
