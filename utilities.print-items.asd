@@ -41,8 +41,8 @@
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
   :license     "LLGPLv3; see COPYING file for details."
-  :description "This system provides some generic condition classes in
-conjunction with support functions and macros."
+  :description "A protocol for flexible and composable printing,
+primarily unreadable printing"
   :depends-on  (:alexandria
                 (:version :let-plus "0.2")
                 :iterate)
@@ -61,7 +61,7 @@ conjunction with support functions and macros."
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
   :license     "LLGPLv3; see COPYING file for details."
-  :description "Unit tests for the cl-print-items system."
+  :description "Unit tests for the utilities.print-items system."
   :depends-on  ((:version :utilities.print-items #.(version/string))
                 :eos)
   :components  ((:module     "test"
