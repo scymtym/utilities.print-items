@@ -1,6 +1,6 @@
 ;;;; utilities.print-items.asd --- System definition for utilities.print-items.
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -40,7 +40,7 @@
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
-  :license     "LLGPLv3; see COPYING file for details."
+  :license     "LLGPLv3" ; see COPYING file for details
   :description "A protocol for flexible and composable printing,
 primarily unreadable printing"
   :depends-on  (:alexandria
@@ -60,7 +60,7 @@ primarily unreadable printing"
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     #.(version/string)
-  :license     "LLGPLv3; see COPYING file for details."
+  :license     "LLGPLv3" ; see COPYING file for details
   :description "Unit tests for the utilities.print-items system."
   :depends-on  ((:version :utilities.print-items #.(version/string))
                 :eos)
