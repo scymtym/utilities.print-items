@@ -5,7 +5,7 @@
 #+KEYWORDS:    print-items, composable printing, print-object, utilities
 #+LANGUAGE:    en
 
-* Introduction
+* STARTED Introduction
   The =utilities.print-items= system provides a protocol for flexible
   and composable printing, primarily unreadable printing.
 
@@ -15,14 +15,15 @@
   considerable flexibility and composability would, in principle, be
   achievable. However, a common idiom is
 
-  #+BEGIN_SRC: lisp
-  (defmethod print-object ((object CLASS) stream)
-    (print-unreadable-object (stream :type t :id t)
-      CODE))
-  #+END_SRC:
+  #+BEGIN_SRC lisp
+    (defmethod print-object ((object CLASS) stream)
+      (print-unreadable-object (stream :type t :id t)
+        CODE))
+  #+END_SRC
 
   which prevents CLOS' flexibility from actually being used.
-
+* TODO Tutorial
+* STARTED Reference
   The =utilities.print-items= system provides the following protocol
   for composable printing:
 
@@ -33,19 +34,19 @@
 
     Each method should return a list of items of the form
 
-    #+BEGIN_EXAMPLE:
+    #+BEGIN_EXAMPLE
    (KEY VALUE [FORMAT [CONSTRAINT*]]
-    #+END_EXAMPLE:
+    #+END_EXAMPLE
 
     where
 
-    #+BEGIN_EXAMPLE:
+    #+BEGIN_EXAMPLE
     KEY        ::= any Lisp object
     VALUE      ::= any Lisp object
     FORMAT     ::= a format string (Default is \"~A\")
 
     CONSTRAINT ::= (:before | :after) KEY
-    #+END_EXAMPLE:
+    #+END_EXAMPLE
 
     When multiple items have =cl:eql= =KEY= s, items appearing closer
     to the beginning of the item list take precedence. This mechanism
@@ -66,9 +67,6 @@
 
     It is used to implement the =cl:print-object= method for
     =print-items-mixin=.
-
-* TODO Tutorial
-
 * Settings                                                         :noexport:
 
 #+OPTIONS: H:2 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
