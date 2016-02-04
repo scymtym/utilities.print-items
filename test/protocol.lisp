@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Tests for protocol functions of the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2013 Jan Moringen
+;;;; Copyright (C) 2013, 2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -41,9 +41,9 @@
 
   (mapc
    (lambda+ ((input expected))
-     (is (string= (with-output-to-string (stream)
-                    (format-print-items stream input))
-                  expected)))
+     (is (string= expected
+                  (with-output-to-string (stream)
+                    (format-print-items stream input)))))
 
    '((((:foo 1))                               "1")
 

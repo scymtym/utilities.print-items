@@ -1,6 +1,6 @@
 ;;;; utilities.print-items.asd --- System definition for utilities.print-items.
 ;;;;
-;;;; Copyright (C) 2010, 2011, 2012, 2013, 2014 Jan Moringen
+;;;; Copyright (C) 2010-2016 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -63,7 +63,7 @@ primarily unreadable printing"
   :license     "LLGPLv3" ; see COPYING file for details
   :description "Unit tests for the utilities.print-items system."
   :depends-on  ((:version :utilities.print-items #.(version/string))
-                :eos)
+                (:version :fiveam                "1.1"))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
