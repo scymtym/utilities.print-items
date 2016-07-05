@@ -22,6 +22,10 @@
   #+END_SRC
 
   which prevents CLOS' flexibility from actually being used.
+
+  #+ATTR_HTML: :alt "build status image" :title Build Status :align right
+  [[https://travis-ci.org/scymtym/utilities.print-items][https://travis-ci.org/scymtym/utilities.print-items.svg]]
+
 * TODO Tutorial
 * STARTED Reference
   The =utilities.print-items= system provides the following protocol
