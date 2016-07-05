@@ -4,42 +4,10 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage #:utilities.print-items-system
-  (:use
-   #:cl
-   #:asdf)
-
-  (:export
-   #:version/list
-   #:version/string))
-
-(cl:in-package #:utilities.print-items-system)
-
-;;; Version stuff
-
-(defparameter +version-major+ 0
-  "Major component of version number.")
-
-(defparameter +version-minor+ 1
-  "Minor component of version number.")
-
-(defparameter +version-revision+ 0
-  "Revision component of version number.")
-
-(defun version/list ()
-  "Return a version of the form (MAJOR MINOR REVISION)."
-  (list +version-major+ +version-minor+ +version-revision+))
-
-(defun version/string ()
-  "Return a version string of the form \"MAJOR.MINOR.REVISION\"."
-  (format nil "~{~A.~A.~A~}" (version/list)))
-
-;;; System definition
-
 (defsystem :utilities.print-items
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     #.(version/string)
+  :version     (:read-file-form "version.sexp")
   :license     "LLGPLv3" ; see COPYING file for details
   :description "A protocol for flexible and composable printing,
 primarily unreadable printing"
@@ -59,10 +27,10 @@ primarily unreadable printing"
 (defsystem :utilities.print-items-test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
-  :version     #.(version/string)
+  :version     (:read-file-form "version.sexp")
   :license     "LLGPLv3" ; see COPYING file for details
   :description "Unit tests for the utilities.print-items system."
-  :depends-on  ((:version :utilities.print-items #.(version/string))
+  :depends-on  ((:version :utilities.print-items (:read-file-form "version.sexp"))
                 (:version :fiveam                "1.1"))
   :components  ((:module     "test"
                  :serial     t
@@ -71,4 +39,4 @@ primarily unreadable printing"
 
 (defmethod perform ((operation test-op)
                     (component (eql (find-system :utilities.print-items-test))))
-  (funcall (find-symbol "RUN-TESTS" :print-items.test)))
+  (uiop:symbol-call '#:print-items.test '#:run-tests))
