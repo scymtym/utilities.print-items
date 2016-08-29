@@ -31,7 +31,7 @@ primarily unreadable printing"
   :license     "LLGPLv3" ; see COPYING file for details
   :description "Unit tests for the utilities.print-items system."
   :depends-on  ((:version :utilities.print-items (:read-file-form "version.sexp"))
-                (:version :fiveam                "1.1"))
+                (:version :fiveam                "1.3"))
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
