@@ -1,6 +1,6 @@
 ;;;; utilities.print-items.asd --- System definition for utilities.print-items.
 ;;;;
-;;;; Copyright (C) 2010-2016 Jan Moringen
+;;;; Copyright (C) 2010-2017 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -22,9 +22,9 @@ primarily unreadable printing"
 
                 (:static-file "README.org"))
 
-  :in-order-to ((test-op (test-op :utilities.print-items-test))))
+  :in-order-to ((test-op (test-op :utilities.print-items/test))))
 
-(defsystem :utilities.print-items-test
+(defsystem :utilities.print-items/test
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :version     (:read-file-form "version.sexp")
@@ -38,5 +38,5 @@ primarily unreadable printing"
                               (:file       "protocol")))))
 
 (defmethod perform ((operation test-op)
-                    (component (eql (find-system :utilities.print-items-test))))
+                    (component (eql (find-system :utilities.print-items/test))))
   (uiop:symbol-call '#:print-items.test '#:run-tests))
