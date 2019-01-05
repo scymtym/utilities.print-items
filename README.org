@@ -5,7 +5,11 @@
 #+KEYWORDS:    print-items, composable printing, print-object, utilities
 #+LANGUAGE:    en
 
+#+SEQ_TODO: TODO STARTED | DONE
+#+OPTIONS: num:nil
+
 * STARTED Introduction
+
   The =utilities.print-items= system provides a protocol for flexible
   and composable printing, primarily unreadable printing.
 
@@ -27,7 +31,9 @@
   [[https://travis-ci.org/scymtym/utilities.print-items][https://travis-ci.org/scymtym/utilities.print-items.svg]]
 
 * TODO Tutorial
+
 * STARTED Reference
+
   The =utilities.print-items= system provides the following protocol
   for composable printing:
 
@@ -39,17 +45,17 @@
     Each method should return a list of items of the form
 
     #+BEGIN_EXAMPLE
-   (KEY VALUE [FORMAT [CONSTRAINT*]]
+      (KEY VALUE [FORMAT [CONSTRAINT*]]
     #+END_EXAMPLE
 
     where
 
     #+BEGIN_EXAMPLE
-    KEY        ::= any Lisp object
-    VALUE      ::= any Lisp object
-    FORMAT     ::= a format string (Default is \"~A\")
+      KEY        ::= any Lisp object
+      VALUE      ::= any Lisp object
+      FORMAT     ::= a format string (Default is \"~A\")
 
-    CONSTRAINT ::= (:before | :after) KEY
+      CONSTRAINT ::= (:before | :after) KEY
     #+END_EXAMPLE
 
     When multiple items have =cl:eql= =KEY= s, items appearing closer
@@ -71,7 +77,3 @@
 
     It is used to implement the =cl:print-object= method for
     =print-items-mixin=.
-* Settings                                                         :noexport:
-
-#+OPTIONS: H:2 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
