@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2012-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -24,8 +24,9 @@
    #:format-print-items)
 
   (:documentation
-   "This package contains the utilities.print-items system for
-    composable printing. The interface consists of
+   "Utilities for composable printing.
+
+    The interface consists of
 
     * `print-items'                     [generic function]
 
