@@ -20,4 +20,4 @@ script:
       -S '(:source-registry (:directory "'$(pwd)'") :ignore-inherited-configuration)'
       -Q
       -s utilities.print-items/test
-      '(or (print-items.test:run-tests) (uiop:quit -1))'
+      '(or (utilities.print-items.test:run-tests) (uiop:quit -1))'
