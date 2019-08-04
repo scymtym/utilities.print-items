@@ -5,17 +5,16 @@
 #+KEYWORDS:    print-items, composable printing, print-object, utilities
 #+LANGUAGE:    en
 
-#+SEQ_TODO: TODO STARTED | DONE
 #+OPTIONS: num:nil
 
-* STARTED Introduction
+* Introduction
 
   The =utilities.print-items= system provides a protocol for flexible
   and composable printing, primarily unreadable printing.
 
-  Why is this needed/useful? Common Lisp has the generic function
-  =cl:print-object=, which is often used to print compact and useful,
-  yet unreadable representations of objects. Thanks to CLOS,
+  Why is this useful? Common Lisp has the generic function
+  ~cl:print-object~, which is often used to print compact and
+  intuitive yet unreadable representations of objects. Thanks to CLOS,
   considerable flexibility and composability would, in principle, be
   achievable. However, a common idiom is
 
@@ -25,14 +24,209 @@
         CODE))
   #+END_SRC
 
-  which prevents CLOS' flexibility from actually being used.
+  which prevents CLOS' flexibility from actually being used:
+
+  + Calling the next method in a ~print-object~ method would either
+    wrap the final result in multiple layers of
+    ~print-unreadable-object~ or some of the method would not be fully
+    functional on their own.
+
+  + Similarly, ~:before~ and ~:after~ methods on ~print-object~ would
+    produce output parts outside of the prefix and suffix produced by
+    ~print-unreadable-object~.
 
   #+ATTR_HTML: :alt "build status image" :title Build Status :align right
   [[https://travis-ci.org/scymtym/utilities.print-items][https://travis-ci.org/scymtym/utilities.print-items.svg]]
 
-* TODO Tutorial
+* Tutorial
 
-* STARTED Reference
+  To illustrate the problem and the solution offered by the
+  =utilities.print-items= system more concretely, consider the
+  following example:
+
+  #+BEGIN_SRC lisp :exports both :results silent
+    (defclass name-mixin ()
+      ((name :initarg :name :reader name)))
+
+    (defclass value-mixin ()
+      ((value :initarg :value :reader value)))
+
+    (defclass binding (name-mixin value-mixin)
+      ())
+  #+END_SRC
+
+** The Problem
+
+   Due to the issues mentioned [[*Introduction][above]], =print-object=-based solutions
+   are not satisfactory:
+
+   #+BEGIN_SRC lisp :exports both :results value
+     (defmethod print-object ((object name-mixin) stream)
+       (format stream "~S" (name object))
+       (when (next-method-p)
+         (call-next-method)))
+
+     (defmethod print-object ((object value-mixin) stream)
+       (format stream "= ~S" (value object))
+       (when (next-method-p)
+         (call-next-method)))
+
+     (princ-to-string (make-instance 'binding :name "foo" :value 5))
+   #+END_SRC
+
+   #+RESULTS:
+   : "foo"= 5#<BINDING {100A912B83}>
+
+   This is somewhat composable and the output has all expected parts,
+   but the arrangement of the output parts is completely wrong as well
+   as hard to control.
+
+   #+BEGIN_SRC lisp :exports results :results silent
+     (ignore-errors
+      (remove-method #'print-object (find-method #'print-object '() (list (find-class 'name-mixin) (find-class 't)))))
+     (ignore-errors
+      (remove-method #'print-object (find-method #'print-object '() (list (find-class 'value-mixin) (find-class 't)))))
+   #+END_SRC
+
+   The opposite approach would be:
+
+   #+BEGIN_SRC lisp :exports both :results value
+     (defmethod print-object ((object binding) stream)
+       (print-unreadable-object (object stream :type t :identity t)
+         (format stream "~S = ~S" (name object) (value object))))
+
+     (princ-to-string (make-instance 'binding :name "foo" :value 5))
+   #+END_SRC
+
+   #+RESULTS:
+   : #<BINDING "foo" = 5 {100BCD44B3}>
+
+   This produces the expected result but is not composable at all
+   since every user of ~name-mixin~ and ~value-mixin~ has to do all
+   the printing itself.
+
+   #+BEGIN_SRC lisp :exports results :results silent
+     (ignore-errors
+      (remove-method #'print-object (find-method #'print-object '() (list (find-class binding) (find-class 't)))))
+   #+END_SRC
+
+** The Solution
+
+   When using the =utilities.print-items= system, ~print-object~
+   methods (note the ~append~ method combination) are replaced by
+   ~print-items:print-items~ methods for mixin classes:
+
+   #+BEGIN_SRC lisp :exports both :results value
+     (defclass name-mixin ()
+       ((%name :initarg :name :reader name)))
+
+     (defmethod print-items:print-items append ((object name-mixin))
+       `((:name ,(name object) "~S")))
+
+     (defclass value-mixin ()
+       ((%value :initarg :value :reader value)))
+
+     (defmethod print-items:print-items append ((object value-mixin))
+       `((:value ,(value object) "= ~S")))
+
+     (defclass binding (name-mixin value-mixin)
+       ())
+
+     (defmethod print-object ((object binding) stream)
+       (print-unreadable-object (object stream :type t :identity t)
+         (print-items:format-print-items stream (print-items:print-items object))))
+
+     (princ-to-string (make-instance 'binding :name "foo" :value 5))
+   #+END_SRC
+
+   #+RESULTS:
+   : #<BINDING = 5"foo" {100CFC3D53}>
+
+   #+BEGIN_SRC lisp :exports results :results silent
+     (ignore-errors
+      (remove-method #'print-object (find-method #'print-object '() (list (find-class binding) (find-class 't)))))
+   #+END_SRC
+
+   This solves the problem of composability and getting all output
+   parts between the prefix and suffix produced by
+   ~print-unreadable-object~, but the arrangement of output parts is
+   not ideal. We could improve the situation by tweaking the order of
+   elements in the superclass list of ~binding~ but that would be
+   intrusive and again not composable when, for example, subclasses of
+   ~binding~ are defined. Furthermore, the ~print-object~ does not do
+   anything specific to ~binding~.
+
+   The following adjustments solve both issues (changes in upper
+   case):
+
+   #+BEGIN_SRC lisp :exports both :results value
+     (defmethod print-items:print-items append ((object value-mixin))
+       `((:value ,(value object) " = ~S" ((:AFTER :NAME)))))
+
+     (defclass binding (name-mixin value-mixin PRINT-ITEMS:PRINT-ITEMS-MIXIN)
+       ())
+
+     ;; no PRINT-OBJECT method for BINDING
+
+     (princ-to-string (make-instance 'binding :name "foo" :value 5))
+   #+END_SRC
+
+   #+RESULTS:
+   : #<BINDING "foo" = 5 {100D33E6A3}>
+
+   Constraints such as ~(:after :name)~ control the order of
+   items. Constraints referring to absent items have no
+   effect. Contradictory constraints cause an error to be signaled.
+
+** Advanced Usage
+
+   It is sometimes necessary to modify the print items produced by
+   superclasses to get the desired printed representation. This can be
+   achieved in two ways:
+
+   1. By defining a ~print-items:print-items append~ method that
+      returns replacements for the undesired items:
+
+      #+BEGIN_SRC lisp :exports both :results value
+        (defclass unnamed-binding (binding)
+          ())
+
+        (defmethod print-items:print-items append ((object unnamed-binding))
+          `((:name nil "«unnamed»")))
+
+        (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
+      #+END_SRC
+
+      #+RESULTS:
+      : #<UNNAMED-BINDING  = 5 {100E349E73}>
+
+      #+BEGIN_SRC lisp :exports results :results silent
+        (ignore-errors
+         (remove-method #'print-items:print-items (find-method #'print-items:print-items '(append) (list (find-class 'unnamed-binding)))))
+      #+END_SRC
+
+   2. By defining a ~print-items:print-items :around~ method that
+      explicitly modifies complete item list:
+
+      #+BEGIN_SRC lisp :exports both :results value
+        (defclass unnamed-binding (binding)
+          ())
+
+        (defmethod print-items:print-items :around ((object unnamed-binding))
+          (remove :name (call-next-method) :key #'first))
+
+        (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
+      #+END_SRC
+
+      #+RESULTS:
+      : #<UNNAMED-BINDING  = 5 {1006D45013}>
+
+      #+BEGIN_SRC lisp :exports results :results silent
+        (ignore-errors
+         (remove-method #'print-items:print-items (find-method #'print-items:print-items '(:around) (list (find-class 'unnamed-binding)))))
+      #+END_SRC
+
+* Reference
 
   The =utilities.print-items= system provides the following protocol
   for composable printing:
