@@ -4,7 +4,10 @@
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage #:print-items
+(cl:defpackage #:utilities.print-items
+  (:nicknames
+   #:print-items)
+
   (:use
    #:cl
    #:alexandria

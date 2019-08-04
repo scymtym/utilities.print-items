@@ -1,10 +1,10 @@
 ;;;; protocol.lisp --- Protocol functions of the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2011, 2012, 2013 Jan Moringen
+;;;; Copyright (C) 2011-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package #:print-items)
+(cl:in-package #:utilities.print-items)
 
 ;;; Print items protocol
 

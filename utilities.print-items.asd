@@ -1,6 +1,6 @@
 ;;;; utilities.print-items.asd --- System definition for utilities.print-items.
 ;;;;
-;;;; Copyright (C) 2010-2017 Jan Moringen
+;;;; Copyright (C) 2010-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -36,4 +36,4 @@
                  :components ((:file       "package")
                               (:file       "protocol"))))
   :perform     (test-op (operation component)
-                 (uiop:symbol-call '#:print-items.test '#:run-tests)))
+                 (uiop:symbol-call '#:utilities.print-items.test '#:run-tests)))

@@ -1,10 +1,10 @@
 ;;;; package.lisp --- Package definition unit tests of the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2013, 2016 Jan Moringen
+;;;; Copyright (C) 2013-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:defpackage #:print-items.test
+(cl:defpackage #:utilities.print-items.test
   (:use
    #:cl
    #:alexandria
@@ -12,7 +12,7 @@
 
    #:fiveam
 
-   #:print-items)
+   #:utilities.print-items)
 
   (:export
    #:run-tests)
@@ -21,7 +21,7 @@
    "This package contains unit tests for the utilities.print-items
 system."))
 
-(cl:in-package #:print-items.test)
+(cl:in-package #:utilities.print-items.test)
 
 (def-suite utilities.print-items)
 

@@ -1,10 +1,11 @@
 ;;;; util.lisp --- Utilities used by the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2013 Jan Moringen
+;;;; Copyright (C) 2013-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package #:print-items)
+(cl:in-package #:utilities.print-items)
+
 
 (defun+ item-< ((key-left  &ign &optional &ign constraints-left)
                 (key-right &ign &optional &ign constraints-right))

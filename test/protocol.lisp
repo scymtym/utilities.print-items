@@ -1,10 +1,10 @@
 ;;;; protocol.lisp --- Tests for protocol functions of the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2013, 2016 Jan Moringen
+;;;; Copyright (C) 2013-2019 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
-(cl:in-package #:print-items.test)
+(cl:in-package #:utilities.print-items.test)
 
 (in-suite utilities.print-items)
 
