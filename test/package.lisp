@@ -8,7 +8,6 @@
   (:use
    #:cl
    #:alexandria
-   #:let-plus
 
    #:fiveam
 

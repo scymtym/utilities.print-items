@@ -26,9 +26,10 @@
   "Smoke test for the `print-items-mixin' class."
 
   (mapc
-   (lambda+ ((initargs expected))
-     (let ((object (apply #'make-instance 'mock initargs)))
-       (is (search expected (princ-to-string object)))))
+   (lambda (initargs-and-expected)
+     (destructuring-bind (initargs expected) initargs-and-expected
+       (let ((object (apply #'make-instance 'mock initargs)))
+         (is (search expected (princ-to-string object))))))
 
    '((()          "MOCK ")
      ((:a 1)      "MOCK [1]")
@@ -40,10 +41,11 @@
   "Smoke test for the `format-print-items' function."
 
   (mapc
-   (lambda+ ((input expected))
-     (is (string= expected
-                  (with-output-to-string (stream)
-                    (format-print-items stream input)))))
+   (lambda (input-and-expected)
+     (destructuring-bind (input expected) input-and-expected
+       (is (string= expected
+                    (with-output-to-string (stream)
+                      (format-print-items stream input))))))
 
    '((((:foo 1))                               "1")
 

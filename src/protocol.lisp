@@ -65,10 +65,10 @@
 
      CONSTRAINT ::= (:before | :after) KEY"
   (declare (ignore colon? at?))
-  (mapc (lambda+ ((&ign value &optional format &ign))
-          (format stream (or format "~A") value))
+  (mapc (lambda (item)
+          (destructuring-bind (key value &optional format constraints) item
+            (declare (ignore key constraints))
+            (format stream (or format "~A") value)))
         (sort-with-partial-order
-         (remove-duplicates items
-                            :key      #'first
-                            :from-end t)
+         (remove-duplicates items :key #'first :from-end t)
          #'item-<)))

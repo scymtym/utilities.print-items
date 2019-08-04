@@ -6,16 +6,21 @@
 
 (cl:in-package #:utilities.print-items)
 
-
-(defun+ item-< ((key-left  &ign &optional &ign constraints-left)
-                (key-right &ign &optional &ign constraints-right))
+(defun item-< (left right)
   "Return non-nil if the left item should be placed before the right."
-  (let+ (((&flet+ satisfied? ((kind arg) other transpose?)
-            (ecase kind
-              (:after  (and transpose? (eql other arg)))
-              (:before (and (not transpose?) (eql other arg)))))))
-    (or (some (rcurry #'satisfied? key-right nil) constraints-left)
-        (some (rcurry #'satisfied? key-left t)    constraints-right))))
+  (destructuring-bind
+      (key-left value-left &optional format-left constraints-left) left
+    (declare (ignore value-left format-left))
+    (destructuring-bind
+        (key-right value-right &optional format-right constraints-right) right
+      (declare (ignore value-right format-right))
+      (flet ((satisfied? (constraint other transpose?)
+               (destructuring-bind (kind target) constraint
+                 (ecase kind
+                   (:after  (and transpose?       (eql other target)))
+                   (:before (and (not transpose?) (eql other target)))))))
+        (or (some (rcurry #'satisfied? key-right nil) constraints-left)
+            (some (rcurry #'satisfied? key-left  t)   constraints-right))))))
 
 (defun sort-with-partial-order (list predicate)
   (dotimes (i (factorial (length list)))

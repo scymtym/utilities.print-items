@@ -10,8 +10,7 @@
 
   (:use
    #:cl
-   #:alexandria
-   #:let-plus)
+   #:alexandria)
 
   ;; print items protocol
   (:export
