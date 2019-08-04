@@ -11,8 +11,7 @@
   (:use
    #:cl
    #:alexandria
-   #:let-plus
-   #:iterate)
+   #:let-plus)
 
   ;; print items protocol
   (:export

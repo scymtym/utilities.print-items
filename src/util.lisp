@@ -20,18 +20,17 @@
 (defun sort-with-partial-order (list predicate)
   (dotimes (i (factorial (length list)))
     (unless
-        (iter outer
-              (for i :below (length list))
-              (iter (for j :from (1+ i) :below (length list))
-                    (when (funcall predicate (nth j list) (nth i list))
-                      (rotatef (nth i list) (nth j list))
-                      (return-from outer t))))
+        (loop :named outer
+              :for i :below (length list)
+              :do (loop :for j :from (1+ i) :below (length list)
+                        :when (funcall predicate (nth j list) (nth i list))
+                        :do (rotatef (nth i list) (nth j list))
+                            (return-from outer t)))
       (return-from sort-with-partial-order list)))
   (error "~<~S does not define a partial order on ~
           ~S.~@:>~%Problems:~%~{* ~{~A - ~A~}~^~%~}"
          (list predicate list)
-         (iter outer
-               (for i :below (length list))
-               (iter (for j :from (1+ i) :below (length list))
-                     (when (funcall predicate (nth j list) (nth i list))
-                       (in outer (collect (list (nth i list) (nth j list)))))))))
+         (loop :for i :below (length list)
+               :appending (loop :for j :from (1+ i) :below (length list)
+                                :when (funcall predicate (nth j list) (nth i list))
+                                :collect (list (nth i list) (nth j list))))))

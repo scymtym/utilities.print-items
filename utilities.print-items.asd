@@ -11,8 +11,7 @@
   :license     "LLGPLv3" ; see COPYING file for details
   :description "A protocol for flexible and composable printing."
   :depends-on  ("alexandria"
-                (:version "let-plus" "0.2")
-                "iterate")
+                (:version "let-plus" "0.2"))
   :components  ((:module     "src"
                  :serial     t
                  :components ((:file       "package")
