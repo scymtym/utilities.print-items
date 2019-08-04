@@ -45,7 +45,7 @@
     Each method should return a list of items of the form
 
     #+BEGIN_EXAMPLE
-      (KEY VALUE [FORMAT [CONSTRAINT*]]
+      (KEY VALUE [FORMAT [(CONSTRAINT*)]]
     #+END_EXAMPLE
 
     where
@@ -53,15 +53,19 @@
     #+BEGIN_EXAMPLE
       KEY        ::= any Lisp object
       VALUE      ::= any Lisp object
-      FORMAT     ::= a format string (Default is \"~A\")
+      FORMAT     ::= nil or a format string (Default is \"~A\")
 
       CONSTRAINT ::= (:before | :after) KEY
     #+END_EXAMPLE
 
     When multiple items have =cl:eql= =KEY= s, items appearing closer
     to the beginning of the item list take precedence. This mechanism
-    can be used to replace print items produced by superclasses in
-    subclasses.
+    can be used by subclasses to replace print items produced by
+    superclasses.
+
+    When =FORMAT= is =nil=, the whole item is ignored. This mechanism
+    can be used by subclasses to disable print items produced by
+    superclasses.
 
   * =print-items:print-items-mixin [class]=
 
@@ -73,7 +77,7 @@
   * =print-items:format-print-items STREAM ITEMS &optional COLON? AT? [function]=
 
     This utility function prints items in the format constructed by
-    the =print-items= functions to a streams.
+    the =print-items= functions to a stream.
 
     It is used to implement the =cl:print-object= method for
     =print-items-mixin=.

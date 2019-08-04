@@ -16,24 +16,28 @@
 
     Each method should return a list of items of the form
 
-      (KEY VALUE [FORMAT [CONSTRAINT*]]
+      (KEY VALUE [FORMAT [(CONSTRAINT*)]]
 
     where
 
       KEY        ::= any Lisp object
       VALUE      ::= any Lisp object
-      FORMAT     ::= a format string (Default is \"~A\")
+      FORMAT     ::= `nil' or a format string (Default is \"~A\")
 
       CONSTRAINT ::= (:before | :after) KEY
 
     When multiple items have `eql' KEYs, items appearing closer to the
     beginning of the item list take precedence. This mechanism can be
-    used to replace print items produced by superclasses in
-    subclasses."))
+    used by subclasses to replace print items produced by
+    superclasses.
+
+    When FORMAT is `nil' the whole item is ignored. This mechanism can
+    be used by subclasses to disable print items produced by
+    superclasses."))
 
 (defmethod print-items append ((object t))
-  "Default behavior is to not return any print items for OBJECT."
-  nil)
+  ;; Default behavior is to not return any print items for OBJECT.
+  '())
 
 ;;; Print items mixin
 
@@ -55,13 +59,13 @@
 
    ITEMS is a list of items of the form
 
-     (KEY VALUE [FORMAT [CONSTRAINT*]]
+     (KEY VALUE [FORMAT [(CONSTRAINT*)]]
 
    where
 
      KEY        ::= any Lisp object
      VALUE      ::= any Lisp object
-     FORMAT     ::= a format string (Default is \"~A\")
+     FORMAT     ::= `nil' or a format string (Default is \"~A\")
 
      CONSTRAINT ::= (:before | :after) KEY"
   (declare (ignore colon? at?))
