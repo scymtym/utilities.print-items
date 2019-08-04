@@ -32,6 +32,7 @@
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
+                              (:file       "util")
                               (:file       "protocol"))))
   :perform     (test-op (operation component)
                  (uiop:symbol-call '#:utilities.print-items.test '#:run-tests)))
