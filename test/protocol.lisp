@@ -37,6 +37,15 @@
      ((:a 1 :b 2) "MOCK [1] (2)")
      ((:a 2 :b 1) "MOCK [2] (1)"))))
 
+(test print-items-mixin.*print-readably*
+  "Test interaction of `print-items-mixin' with `*print-readably*'."
+
+  (signals error
+    ;; Prevent SBCL from eliminating the call.
+    (when (emptyp (let ((*print-readably* t))
+                    (prin1-to-string (make-instance 'mock))))
+      (fail))))
+
 (test format-print-items.smoke
   "Smoke test for the `format-print-items' function."
 
