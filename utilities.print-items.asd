@@ -5,12 +5,14 @@
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
 (defsystem "utilities.print-items"
+  :description "A protocol for flexible and composable printing."
+  :license     "LLGPLv3" ; see COPYING file for details
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
+
   :version     (:read-file-form "version.sexp")
-  :license     "LLGPLv3" ; see COPYING file for details
-  :description "A protocol for flexible and composable printing."
   :depends-on  ("alexandria")
+
   :components  ((:module     "src"
                  :serial     t
                  :components ((:file       "package")
@@ -22,13 +24,15 @@
   :in-order-to ((test-op (test-op "utilities.print-items/test"))))
 
 (defsystem "utilities.print-items/test"
+  :description "Unit tests for the utilities.print-items system."
+  :license     "LLGPLv3" ; see COPYING file for details
   :author      "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
   :maintainer  "Jan Moringen <jmoringe@techfak.uni-bielefeld.de>"
+
   :version     (:read-file-form "version.sexp")
-  :license     "LLGPLv3" ; see COPYING file for details
-  :description "Unit tests for the utilities.print-items system."
   :depends-on  ((:version "utilities.print-items" (:read-file-form "version.sexp"))
                 (:version "fiveam"                "1.3"))
+
   :components  ((:module     "test"
                  :serial     t
                  :components ((:file       "package")
