@@ -113,8 +113,8 @@
 ** The Solution
 
    When using the =utilities.print-items= system, ~print-object~
-   methods (note the ~append~ method combination) are replaced by
-   ~print-items:print-items~ methods for mixin classes:
+   methods are replaced by ~print-items:print-items~ methods (note the
+   ~append~ method combination) for mixin classes:
 
    #+BEGIN_SRC lisp :exports both :results value
      (defclass name-mixin ()
@@ -153,8 +153,8 @@
    not ideal. We could improve the situation by tweaking the order of
    elements in the superclass list of ~binding~ but that would be
    intrusive and again not composable when, for example, subclasses of
-   ~binding~ are defined. Furthermore, the ~print-object~ does not do
-   anything specific to ~binding~.
+   ~binding~ are defined. Furthermore, the ~print-object~ method does
+   not do anything specific to ~binding~.
 
    The following adjustments solve both issues (changes in upper
    case):
@@ -206,7 +206,7 @@
       #+END_SRC
 
    2. By defining a ~print-items:print-items :around~ method that
-      explicitly modifies complete item list:
+      explicitly modifies the complete item list:
 
       #+BEGIN_SRC lisp :exports both :results value
         (defclass unnamed-binding (binding)
