@@ -14,9 +14,9 @@
 
   Why is this useful? Common Lisp has the generic function
   ~cl:print-object~, which is often used to print compact and
-  intuitive yet unreadable representations of objects. Thanks to CLOS,
-  considerable flexibility and composability would, in principle, be
-  achievable. However, a common idiom is
+  intuitive yet unreadable (by ~cl:read~) representations of
+  objects. Thanks to CLOS, considerable flexibility and composability
+  would, in principle, be achievable. However, a common idiom is
 
   #+BEGIN_SRC lisp
     (defmethod print-object ((object CLASS) stream)
@@ -24,12 +24,13 @@
         CODE))
   #+END_SRC
 
-  which prevents CLOS' flexibility from actually being used:
+  which prevents the flexibility provided by CLOS from actually being
+  used:
 
   + Calling the next method in a ~print-object~ method would either
     wrap the final result in multiple layers of
-    ~print-unreadable-object~ or some of the method would not be fully
-    functional on their own.
+    ~print-unreadable-object~ or some of the methods would not be
+    fully functional on their own.
 
   + Similarly, ~:before~ and ~:after~ methods on ~print-object~ would
     produce output parts outside of the prefix and suffix produced by
@@ -57,7 +58,7 @@
 
 ** The Problem
 
-   Due to the issues mentioned [[*Introduction][above]], =print-object=-based solutions
+   Due to the issues mentioned [[*Introduction][above]], ~print-object~-based solutions
    are not satisfactory:
 
    #+BEGIN_SRC lisp :exports both :results value
@@ -180,9 +181,9 @@
 
 ** Advanced Usage
 
-   It is sometimes necessary to modify the print items produced by
-   superclasses to get the desired printed representation. This can be
-   achieved in two ways:
+   It is sometimes necessary to modify or suppress the print items
+   produced for superclasses to get the desired printed
+   representation. This can be achieved in two ways:
 
    1. By defining a ~print-items:print-items append~ method that
       returns replacements for the undesired items:
