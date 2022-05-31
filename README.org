@@ -130,18 +130,19 @@
      (defmethod print-items:print-items append ((object value-mixin))
        `((:value ,(value object) "= ~S")))
 
-     (defclass binding (name-mixin value-mixin)
+     (defclass binding (value-mixin name-mixin)
        ())
 
      (defmethod print-object ((object binding) stream)
        (print-unreadable-object (object stream :type t :identity t)
-         (print-items:format-items stream (print-items:print-items object))))
+         (print-items:format-items
+          stream (print-items:effective-print-items object))))
 
      (princ-to-string (make-instance 'binding :name "foo" :value 5))
    #+END_SRC
 
    #+RESULTS:
-   : #<BINDING = 5"foo" {100CFC3D53}>
+   : #<BINDING = 5"foo" {100A8056D3}>
 
    #+BEGIN_SRC lisp :exports results :results silent
      (ignore-errors

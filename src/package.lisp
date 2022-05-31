@@ -14,7 +14,8 @@
 
   ;; Print items protocol
   (:export
-   #:print-items)
+   #:print-items
+   #:effective-print-items)
 
   ;; Formatting functions
   (:export

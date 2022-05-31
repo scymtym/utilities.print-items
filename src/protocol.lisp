@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Protocol functions of the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2011-2019 Jan Moringen
+;;;; Copyright (C) 2011-2022 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -35,9 +35,26 @@
     be used by subclasses to disable print items produced by
     superclasses."))
 
+(defgeneric effective-print-items (object)
+  (:documentation
+   "Return a list of items like `print-items', but filtered and sorted.
+
+    Filtering removes all but the first occurrence of multiple items
+    using the same key.
+
+    Sorting arranges the filtered items according to their specified
+    constraints."))
+
+;;; Default behavior
+
 (defmethod print-items append ((object t))
   ;; Default behavior is to not return any print items for OBJECT.
   '())
+
+(defmethod effective-print-items ((object t))
+  (let* ((raw    (print-items object))
+         (unique (remove-duplicates raw :key #'first :from-end t)))
+    (sort-with-partial-order unique #'item-<)))
 
 ;;; Utility functions
 
@@ -60,6 +77,8 @@
           (destructuring-bind (key value &optional format constraints) item
             (declare (ignore key constraints))
             (format stream (or format "~A") value)))
+        ;; TODO we might remove this later and expect the client to
+        ;; pass in the effective list of items
         (sort-with-partial-order
          (remove-duplicates items :key #'first :from-end t)
          #'item-<)))
@@ -82,4 +101,4 @@
          (print-unreadable-object (object stream :identity t)
            (format stream "~A~@[ ~/print-items:format-items/~]"
                    (class-name (class-of object))
-                   (print-items object))))))
+                   (effective-print-items object))))))
