@@ -56,7 +56,13 @@
          (unique (remove-duplicates raw :key #'first :from-end t)))
     (sort-with-partial-order unique #'item-<)))
 
-;;; Utility functions
+;;; Formatting functions
+
+(defun format-item (stream item &optional colon? at?)
+  (declare (ignore colon? at?))
+  (destructuring-bind (key value &optional format constraints) item
+    (declare (ignore key constraints))
+    (format stream (or format "~A") value)))
 
 (defun format-items (stream items &optional colon? at?)
   "Print ITEMS onto STREAM.
@@ -73,10 +79,7 @@
 
      CONSTRAINT ::= (:before | :after) KEY"
   (declare (ignore colon? at?))
-  (mapc (lambda (item)
-          (destructuring-bind (key value &optional format constraints) item
-            (declare (ignore key constraints))
-            (format stream (or format "~A") value)))
+  (mapc (curry #'format-item stream)
         ;; TODO we might remove this later and expect the client to
         ;; pass in the effective list of items
         (sort-with-partial-order

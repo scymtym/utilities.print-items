@@ -182,51 +182,80 @@
 
 ** Advanced Usage
 
-   It is sometimes necessary to modify or suppress the print items
-   produced for superclasses to get the desired printed
-   representation. This can be achieved in two ways:
+*** Adjusting Items
 
-   1. By defining a ~print-items:print-items append~ method that
-      returns replacements for the undesired items:
+    It is sometimes necessary to modify or suppress the print items
+    produced for superclasses to get the desired printed
+    representation. This can be achieved in two ways:
 
-      #+BEGIN_SRC lisp :exports both :results value
-        (defclass unnamed-binding (binding)
-          ())
+    1. By defining a ~print-items:print-items append~ method that
+       returns replacements for the undesired items:
 
-        (defmethod print-items:print-items append ((object unnamed-binding))
-          `((:name nil "«unnamed»")))
+       #+BEGIN_SRC lisp :exports both :results value
+         (defclass unnamed-binding (binding)
+           ())
 
-        (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
-      #+END_SRC
+         (defmethod print-items:print-items append ((object unnamed-binding))
+           `((:name nil "«unnamed»")))
 
-      #+RESULTS:
-      : #<UNNAMED-BINDING  = 5 {100E349E73}>
+         (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
+       #+END_SRC
 
-      #+BEGIN_SRC lisp :exports results :results silent
-        (ignore-errors
-         (remove-method #'print-items:print-items (find-method #'print-items:print-items '(append) (list (find-class 'unnamed-binding)))))
-      #+END_SRC
+       #+RESULTS:
+       : #<UNNAMED-BINDING  = 5 {100E349E73}>
 
-   2. By defining a ~print-items:print-items :around~ method that
-      explicitly modifies the complete item list:
+       #+BEGIN_SRC lisp :exports results :results silent
+         (ignore-errors
+          (remove-method #'print-items:print-items (find-method #'print-items:print-items '(append) (list (find-class 'unnamed-binding)))))
+       #+END_SRC
 
-      #+BEGIN_SRC lisp :exports both :results value
-        (defclass unnamed-binding (binding)
-          ())
+    2. By defining a ~print-items:print-items :around~ method that
+       explicitly modifies the complete item list:
 
-        (defmethod print-items:print-items :around ((object unnamed-binding))
-          (remove :name (call-next-method) :key #'first))
+       #+BEGIN_SRC lisp :exports both :results value
+         (defclass unnamed-binding (binding)
+           ())
 
-        (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
-      #+END_SRC
+         (defmethod print-items:print-items :around ((object unnamed-binding))
+           (remove :name (call-next-method) :key #'first))
 
-      #+RESULTS:
-      : #<UNNAMED-BINDING  = 5 {1006D45013}>
+         (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
+       #+END_SRC
 
-      #+BEGIN_SRC lisp :exports results :results silent
-        (ignore-errors
-         (remove-method #'print-items:print-items (find-method #'print-items:print-items '(:around) (list (find-class 'unnamed-binding)))))
-      #+END_SRC
+       #+RESULTS:
+       : #<UNNAMED-BINDING  = 5 {1006D45013}>
+
+       #+BEGIN_SRC lisp :exports results :results silent
+         (ignore-errors
+          (remove-method #'print-items:print-items (find-method #'print-items:print-items '(:around) (list (find-class 'unnamed-binding)))))
+       #+END_SRC
+
+*** Formatting Items
+
+    When it is necessary to take full control of item formatting, the
+    functions ~utilities.print-items:format-item~ and
+    ~utilities.print-items:format-items~ can be used:
+
+    #+BEGIN_SRC lisp :exports both :results value
+      (defclass custom-printing-binding (binding)
+        ())
+
+      (defmethod print-object ((object custom-printing-binding) stream)
+        (print-unreadable-object (object stream :type t :identity t)
+          (let ((items (utilities.print-items:effective-print-items object)))
+            (format stream "my name is ~/utilities.print-items:format-item/, ~
+                            my value is ~/utilities.print-items:format-item/, ~
+                            the normal format would be ~
+                            |~/utilities.print-items:format-items/|"
+                    (find :name items :key #'first)
+                    (find :value items :key #'first)
+                    items))))
+
+      (princ-to-string (make-instance 'custom-printing-binding :name "name" :value 5))
+    #+END_SRC
+
+    #+RESULTS:
+    : #<CUSTOM-PRINTING-BINDING my name is "name", my value is  = 5, the normal format would be |"name" = 5| {100A0792A3}>
 
 * Reference
 
@@ -269,6 +298,11 @@
 
     Subclasses can define methods on =print-items:print-items= to
     change or extend the printed representation.
+
+  * =print-items:format-item STREAM ITEM &optional COLON? AT? [function]=
+
+    This utility function prints a single item in the format
+    constructed by the =print-items= function to a stream.
 
   * =print-items:format-items STREAM ITEMS &optional COLON? AT? [function]=
 

@@ -19,6 +19,7 @@
 
   ;; Formatting functions
   (:export
+   #:format-item
    #:format-items
    #:format-print-items)
 
