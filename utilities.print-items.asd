@@ -13,7 +13,7 @@
   :version     (:read-file-form "version.sexp")
   :depends-on  ("alexandria")
 
-  :components  ((:module     "src"
+  :components  ((:module     "code"
                  :serial     t
                  :components ((:file       "package")
                               (:file       "util")
