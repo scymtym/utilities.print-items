@@ -25,11 +25,29 @@
               (assert (is (equal expected-format-control format-control)))
               (assert (is (equal expected-arguments      arguments)))
               (assert (is (equal expected-options        options))))))
-        '(; ((:key)             :key nil nil   ()      ())
-          ((:key nil)         :key t   nil   (nil)   ())
-          ((:key "foo")       :key t   nil   ("foo") ())
-          ((:key 1)           :key t   nil   (1)     ())
-          ((:key "foo" "bar") :key t   "bar" ("foo") ()))))
+        '(;; Current item syntax
+          ((:key)                             :key nil nil   ()      ())
+          ((:key nil)                         :key nil nil   ()      ())
+          ((:key "foo")                       :key t   "foo" ()      ())
+          ((:key 1)                           :key t   "~A"  (1)     ())
+          ((:key "foo" nil)                   :key t   "foo" (nil)   ())
+          ((:key "foo" 1)                     :key t   "foo" (1)     ())
+          ((:key "foo" 1 2)                   :key t   "foo" (1 2)   ())
+          (((:key) "foo" 1 2)                 :key t   "foo" (1 2)   ())
+          (((:key (:after :baz)) "foo" 1 2)   :key t   "foo" (1 2)   ((:after :baz)))
+
+          ;; Legacy item syntax
+          ((:key 1     nil)                   :key nil nil   ()      ())
+          ((:key 1     nil ((:after :baz)))   :key t   "~A"  (1)     ((:after :baz)))
+          ((:key 1     "bar")                 :key t   "bar" (1)     ())
+          ((:key 1     "bar" ((:after :baz))) :key t   "bar" (1)     ((:after :baz)))
+
+          ;; Unsupported legacy item syntax
+          ;; ((:key "foo" nil)                   :key nil nil   ()      ())
+          ;; ((:key "foo" nil ((:after :baz)))   :key t   "~A"  ("foo") ((:after :baz)))
+          ;; ((:key "foo" "bar")                 :key t   "bar" ("foo") ())
+          ;; ((:key "foo" "bar" ((:after :baz))) :key t   "bar" ("foo") ((:after :baz)))
+          )))
 
 ;;; Topological sort
 

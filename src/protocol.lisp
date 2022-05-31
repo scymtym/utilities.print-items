@@ -16,24 +16,26 @@
 
     Each method should return a list of items of the form
 
-      (KEY VALUE [FORMAT [(CONSTRAINT*)]]
+      ITEM              ::= (KEY-AND-OPTIONS FORMAT-CONTROL ARGUMENT*)
 
-    where
+      KEY-AND-OPTIONS   ::= KEY
+                            | (KEY OPTION*)
+      KEY               ::= any Lisp object
+      OPTION            ::= CONSTRAINT
+      CONSTRAINT        ::= ((:before | :after) KEY)
 
-      KEY        ::= any Lisp object
-      VALUE      ::= any Lisp object
-      FORMAT     ::= `nil' or a format string (Default is \"~A\")
-
-      CONSTRAINT ::= (:before | :after) KEY
+      FORMAT-CONTROL    ::= `nil'
+                            | a format control string or a formatter function
+      ARGUMENT          ::= any Lisp object
 
     When multiple items have `eql' KEYs, items appearing closer to the
     beginning of the item list take precedence. This mechanism can be
     used by subclasses to replace print items produced by
     superclasses.
 
-    When FORMAT is `nil' the whole item is ignored. This mechanism can
-    be used by subclasses to disable print items produced by
-    superclasses."))
+    When FORMAT-CONTROL is `nil' the whole item is ignored. This
+    mechanism can be used by subclasses to disable print items
+    produced by superclasses."))
 
 (defgeneric effective-print-items (object)
   (:documentation
@@ -60,24 +62,28 @@
 
 (defun format-item (stream item &optional colon? at?)
   (declare (ignore colon? at?))
-  (destructure-item (nil enabled? format values) item
+  (destructure-item (nil enabled? format arguments) item
     (when enabled?
-      (apply #'format stream (or format "~A") values))))
+      (format stream "~?" format arguments))))
 
 (defun format-items (stream items &optional colon? at?)
   "Print ITEMS onto STREAM.
 
    ITEMS is a list of items of the form
 
-     (KEY VALUE [FORMAT [(CONSTRAINT*)]]
+     (KEY-AND-OPTIONS FORMAT-CONTROL ARGUMENT*)
 
    where
 
-     KEY        ::= any Lisp object
-     VALUE      ::= any Lisp object
-     FORMAT     ::= `nil' or a format string (Default is \"~A\")
+     KEY-AND-OPTIONS ::= KEY
+                         | (KEY OPTION*)
+     KEY             ::= any Lisp object
+     OPTION          ::= CONSTRAINT
+     CONSTRAINT      ::= ((:before | :after) KEY)
 
-     CONSTRAINT ::= (:before | :after) KEY"
+     FORMAT-CONTROL  ::= `nil'
+                         | a format control string or a formatter function
+     ARGUMENT        ::= any Lisp object"
   (declare (ignore colon? at?))
   (mapc (curry #'format-item stream)
         ;; TODO we might remove this later and expect the client to

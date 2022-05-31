@@ -122,13 +122,13 @@
        ((%name :initarg :name :reader name)))
 
      (defmethod print-items:print-items append ((object name-mixin))
-       `((:name ,(name object) "~S")))
+       `((:name "~S" ,(name object))))
 
      (defclass value-mixin ()
        ((%value :initarg :value :reader value)))
 
      (defmethod print-items:print-items append ((object value-mixin))
-       `((:value ,(value object) "= ~S")))
+       `((:value "= ~S" ,(value object))))
 
      (defclass binding (value-mixin name-mixin)
        ())
@@ -142,7 +142,7 @@
    #+END_SRC
 
    #+RESULTS:
-   : #<BINDING = 5"foo" {100A8056D3}>
+   : #<BINDING = 5"foo" {100B2448F3}>
 
    #+BEGIN_SRC lisp :exports results :results silent
      (ignore-errors
@@ -163,7 +163,7 @@
 
    #+BEGIN_SRC lisp :exports both :results value
      (defmethod print-items:print-items append ((object value-mixin))
-       `((:value ,(value object) " = ~S" ((:AFTER :NAME)))))
+       `(((:value (:AFTER :NAME)) " = ~S" ,(value object))))
 
      (defclass binding (name-mixin value-mixin PRINT-ITEMS:PRINT-ITEMS-MIXIN)
        ())
@@ -174,7 +174,7 @@
    #+END_SRC
 
    #+RESULTS:
-   : #<BINDING "foo" = 5 {100D33E6A3}>
+   : #<BINDING "foo" = 5 {100B54C8D3}>
 
    Constraints such as ~(:after :name)~ control the order of
    items. Constraints referring to absent items have no
@@ -196,13 +196,13 @@
            ())
 
          (defmethod print-items:print-items append ((object unnamed-binding))
-           `((:name nil "«unnamed»")))
+           `((:name "«unnamed»")))
 
          (princ-to-string (make-instance 'unnamed-binding :name nil :value 5))
        #+END_SRC
 
        #+RESULTS:
-       : #<UNNAMED-BINDING  = 5 {100E349E73}>
+       : #<UNNAMED-BINDING «unnamed» = 5 {100B985D33}>
 
        #+BEGIN_SRC lisp :exports results :results silent
          (ignore-errors
@@ -247,15 +247,15 @@
                             my value is ~/utilities.print-items:format-item/, ~
                             the normal format would be ~
                             |~/utilities.print-items:format-items/|"
-                    (find :name items :key #'first)
-                    (find :value items :key #'first)
+                    (find :name items :key #'utilities.print-items::parse-item)
+                    (find :value items :key #'utilities.print-items::parse-item)
                     items))))
 
       (princ-to-string (make-instance 'custom-printing-binding :name "name" :value 5))
     #+END_SRC
 
     #+RESULTS:
-    : #<CUSTOM-PRINTING-BINDING my name is "name", my value is  = 5, the normal format would be |"name" = 5| {100A0792A3}>
+    : #<CUSTOM-PRINTING-BINDING my name is "name", my value is  = 5, the normal format would be |"name" = 5| {100C88B633}>
 
 * Reference
 
@@ -270,17 +270,17 @@
     Each method should return a list of items of the form
 
     #+BEGIN_EXAMPLE
-      (KEY VALUE [FORMAT [(CONSTRAINT*)]]
-    #+END_EXAMPLE
+      ITEM              ::= (KEY-AND-OPTIONS FORMAT-CONTROL ARGUMENT*)
 
-    where
+      KEY-AND-OPTIONS   ::= KEY
+                            | (KEY OPTION*)
+      KEY               ::= any Lisp object
+      OPTION            ::= CONSTRAINT
+      CONSTRAINT        ::= ((:before | :after) KEY)
 
-    #+BEGIN_EXAMPLE
-      KEY        ::= any Lisp object
-      VALUE      ::= any Lisp object
-      FORMAT     ::= nil or a format string (Default is \"~A\")
-
-      CONSTRAINT ::= (:before | :after) KEY
+      FORMAT-CONTROL    ::= `nil'
+                            | a format control string or a formatter function
+      ARGUMENT          ::= any Lisp object
     #+END_EXAMPLE
 
     When multiple items have =cl:eql= =KEY= s, items appearing closer
@@ -288,9 +288,9 @@
     can be used by subclasses to replace print items produced by
     superclasses.
 
-    When =FORMAT= is =nil=, the whole item is ignored. This mechanism
-    can be used by subclasses to disable print items produced by
-    superclasses.
+    When =FORMAT-CONTROL= is =nil=, the whole item is ignored. This
+    mechanism can be used by subclasses to disable print items
+    produced by superclasses.
 
   * =print-items:print-items-mixin [class]=
 

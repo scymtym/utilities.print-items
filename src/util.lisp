@@ -8,9 +8,34 @@
 
 ;;; Destructuring
 
+(defun maybe-convert-legacy-item (item)
+  (typecase item
+    ((cons symbol (cons (not string) (or (cons null null))))
+     (list (first item) nil))
+    ((cons symbol (cons (not string) (or (cons null (cons list null))
+                                         (cons string))))
+     (destructuring-bind (key value format-control &optional options) item
+       (list (list* key options) (or format-control "~A") value)))
+    (t
+     item)))
+
 (defun parse-item (item)
-  (destructuring-bind (key value &optional format-control options) item
-    (values key t format-control (list value) options)))
+  (destructuring-bind
+      (key-and-options &optional format-control &rest arguments)
+      (maybe-convert-legacy-item item)
+    (multiple-value-bind (key options)
+        (if (consp key-and-options)
+            (values (first key-and-options) (rest key-and-options))
+            (values key-and-options         '()))
+      (multiple-value-bind (enabled? format-control arguments)
+          (typecase format-control
+            (null
+             (values nil nil '()))
+            ((or string function)
+             (values t format-control arguments))
+            (t
+             (values t "~A" (list format-control))))
+        (values key enabled? format-control arguments options)))))
 
 (defmacro destructure-item ((key
                              &optional enabled? format-control values options)
@@ -96,12 +121,12 @@
 
 (defun item-< (left right)
   "Return non-nil if the left item should be placed before the right."
-  (destructure-item (key-left nil nil nil constraints-left) left
-    (destructure-item (key-right nil nil nil constraints-right) right
+  (destructure-item (key-left nil nil nil options-left) left
+    (destructure-item (key-right nil nil nil options-right) right
       (flet ((satisfied? (constraint other transpose?)
                (destructuring-bind (kind target) constraint
                  (ecase kind
                    (:after  (and transpose?       (eql other target)))
                    (:before (and (not transpose?) (eql other target)))))))
-        (or (some (rcurry #'satisfied? key-right nil) constraints-left)
-            (some (rcurry #'satisfied? key-left  t)   constraints-right))))))
+        (or (some (rcurry #'satisfied? key-right nil) options-left)
+            (some (rcurry #'satisfied? key-left  t)   options-right))))))

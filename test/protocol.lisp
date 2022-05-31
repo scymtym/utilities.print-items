@@ -55,7 +55,20 @@
                     (with-output-to-string (stream)
                       (format-items stream input))))))
 
-   '((((:foo 1))                               "1")
+   '((((:foo 1))                                     "1")
+     ;; Disabling
+     (((:foo))                                       "")
+     (((:foo nil))                                   "")
+     (((:foo (nil)))                                 "(NIL)")
+     ;; Overriding
+     (((:foo "~A" 1) (:foo))                         "1")
+     (((:foo) (:foo "~A" 1))                         "")
 
-     (((:foo 1) (:bar 2 nil ((:after  :foo)))) "12")
-     (((:foo 1) (:bar 2 nil ((:before :foo)))) "21"))))
+     (((:foo 1) (:foo))                              "1")
+     (((:foo) (:foo 1))                              "")
+     ;; Sorting
+     (((:foo "~A" 1) ((:bar (:after  :foo)) "~A" 2)) "12")
+     (((:foo "~A" 1) ((:bar (:before :foo)) "~A" 2)) "21")
+
+     (((:foo 1) (:bar 2 nil ((:after  :foo))))       "12")
+     (((:foo 1) (:bar 2 nil ((:before :foo))))       "21"))))
