@@ -1,6 +1,6 @@
 ;;;; protocol.lisp --- Tests for protocol functions of the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2013-2019 Jan Moringen
+;;;; Copyright (C) 2013-2022 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -46,15 +46,14 @@
                     (prin1-to-string (make-instance 'mock))))
       (fail))))
 
-(test format-print-items.smoke
-  "Smoke test for the `format-print-items' function."
-
+(test format-items.smoke
+  "Smoke test for the `format-items' function."
   (mapc
    (lambda (input-and-expected)
      (destructuring-bind (input expected) input-and-expected
        (is (string= expected
                     (with-output-to-string (stream)
-                      (format-print-items stream input))))))
+                      (format-items stream input))))))
 
    '((((:foo 1))                               "1")
 

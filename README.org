@@ -135,7 +135,7 @@
 
      (defmethod print-object ((object binding) stream)
        (print-unreadable-object (object stream :type t :identity t)
-         (print-items:format-print-items stream (print-items:print-items object))))
+         (print-items:format-items stream (print-items:print-items object))))
 
      (princ-to-string (make-instance 'binding :name "foo" :value 5))
    #+END_SRC
@@ -269,10 +269,10 @@
     Subclasses can define methods on =print-items:print-items= to
     change or extend the printed representation.
 
-  * =print-items:format-print-items STREAM ITEMS &optional COLON? AT? [function]=
+  * =print-items:format-items STREAM ITEMS &optional COLON? AT? [function]=
 
     This utility function prints items in the format constructed by
-    the =print-items= functions to a stream.
+    the =print-items= function to a stream.
 
     It is used to implement the =cl:print-object= method for
     =print-items-mixin=.

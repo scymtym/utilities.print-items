@@ -1,6 +1,6 @@
 ;;;; package.lisp --- Package definition for the utilities.print-items system.
 ;;;;
-;;;; Copyright (C) 2012-2019 Jan Moringen
+;;;; Copyright (C) 2012-2022 Jan Moringen
 ;;;;
 ;;;; Author: Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
 
@@ -18,6 +18,7 @@
 
   ;; Formatting functions
   (:export
+   #:format-items
    #:format-print-items)
 
   ;; `print-items-mixin' mixin class
@@ -39,6 +40,6 @@
       Can be used to make subclasses the print items mechanism when
       passed to `print-object'.
 
-    * `format-print-items'              [function]
+    * `format-items'                    [function]
 
       Utility function for formatting print items onto a stream."))

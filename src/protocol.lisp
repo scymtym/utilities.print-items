@@ -41,7 +41,7 @@
 
 ;;; Utility functions
 
-(defun format-print-items (stream items &optional colon? at?)
+(defun format-items (stream items &optional colon? at?)
   "Print ITEMS onto STREAM.
 
    ITEMS is a list of items of the form
@@ -64,6 +64,10 @@
          (remove-duplicates items :key #'first :from-end t)
          #'item-<)))
 
+(defun format-print-items (stream items &optional colon? at?)
+  "Alias for `format-items'."
+  (format-items stream items colon? at?))
+
 ;;; Print items mixin
 
 (defclass print-items-mixin ()
@@ -76,6 +80,6 @@
          (call-next-method))
         (t
          (print-unreadable-object (object stream :identity t)
-           (format stream "~A~@[ ~/print-items:format-print-items/~]"
+           (format stream "~A~@[ ~/print-items:format-items/~]"
                    (class-name (class-of object))
                    (print-items object))))))
