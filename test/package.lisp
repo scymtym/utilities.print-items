@@ -14,6 +14,8 @@
    #:utilities.print-items)
 
   (:import-from #:utilities.print-items
+   #:parse-item
+
    #:cycle-error
    #:sort-with-partial-order)
 

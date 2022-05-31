@@ -6,6 +6,30 @@
 
 (cl:in-package #:utilities.print-items)
 
+;;; Destructuring
+
+(defun parse-item (item)
+  (destructuring-bind (key value &optional format-control options) item
+    (values key t format-control (list value) options)))
+
+(defmacro destructure-item ((key
+                             &optional enabled? format-control values options)
+                            item &body body)
+  (let ((names   '())
+        (ignored '()))
+    (mapl (lambda (remainder)
+            (destructuring-bind (name . rest) remainder
+              (cond (name
+                     (push name names))
+                    ((find nil rest :test-not #'eq)
+                     (let ((name (gensym)))
+                       (push name names)
+                       (push name ignored))))))
+          (list key enabled? format-control values options))
+    `(multiple-value-bind ,(reverse names) (parse-item ,item)
+       (declare (ignore ,@ignored))
+       ,@body)))
+
 ;;; Topological sort
 
 (define-condition cycle-error (error)
@@ -72,12 +96,8 @@
 
 (defun item-< (left right)
   "Return non-nil if the left item should be placed before the right."
-  (destructuring-bind
-      (key-left value-left &optional format-left constraints-left) left
-    (declare (ignore value-left format-left))
-    (destructuring-bind
-        (key-right value-right &optional format-right constraints-right) right
-      (declare (ignore value-right format-right))
+  (destructure-item (key-left nil nil nil constraints-left) left
+    (destructure-item (key-right nil nil nil constraints-right) right
       (flet ((satisfied? (constraint other transpose?)
                (destructuring-bind (kind target) constraint
                  (ecase kind

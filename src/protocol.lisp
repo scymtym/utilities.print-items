@@ -60,9 +60,9 @@
 
 (defun format-item (stream item &optional colon? at?)
   (declare (ignore colon? at?))
-  (destructuring-bind (key value &optional format constraints) item
-    (declare (ignore key constraints))
-    (format stream (or format "~A") value)))
+  (destructure-item (nil enabled? format values) item
+    (when enabled?
+      (apply #'format stream (or format "~A") values))))
 
 (defun format-items (stream items &optional colon? at?)
   "Print ITEMS onto STREAM.
