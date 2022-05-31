@@ -47,10 +47,10 @@
 
   #+BEGIN_SRC lisp :exports both :results silent
     (defclass name-mixin ()
-      ((name :initarg :name :reader name)))
+      ((%name :initarg :name :reader name)))
 
     (defclass value-mixin ()
-      ((value :initarg :value :reader value)))
+      ((%value :initarg :value :reader value)))
 
     (defclass binding (name-mixin value-mixin)
       ())
