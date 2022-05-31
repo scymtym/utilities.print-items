@@ -39,22 +39,6 @@
   ;; Default behavior is to not return any print items for OBJECT.
   '())
 
-;;; Print items mixin
-
-(defclass print-items-mixin ()
-  ()
-  (:documentation
-   "This mixin class adds printing via `print-items' to classes."))
-
-(defmethod print-object ((object print-items-mixin) stream)
-  (cond (*print-readably*
-         (call-next-method))
-        (t
-         (print-unreadable-object (object stream :identity t)
-           (format stream "~A~@[ ~/print-items:format-print-items/~]"
-                   (class-name (class-of object))
-                   (print-items object))))))
-
 ;;; Utility functions
 
 (defun format-print-items (stream items &optional colon? at?)
@@ -79,3 +63,19 @@
         (sort-with-partial-order
          (remove-duplicates items :key #'first :from-end t)
          #'item-<)))
+
+;;; Print items mixin
+
+(defclass print-items-mixin ()
+  ()
+  (:documentation
+   "This mixin class adds printing via `print-items' to classes."))
+
+(defmethod print-object ((object print-items-mixin) stream)
+  (cond (*print-readably*
+         (call-next-method))
+        (t
+         (print-unreadable-object (object stream :identity t)
+           (format stream "~A~@[ ~/print-items:format-print-items/~]"
+                   (class-name (class-of object))
+                   (print-items object))))))

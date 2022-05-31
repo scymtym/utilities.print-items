@@ -12,17 +12,17 @@
    #:cl
    #:alexandria)
 
-  ;; print items protocol
+  ;; Print items protocol
   (:export
    #:print-items)
+
+  ;; Formatting functions
+  (:export
+   #:format-print-items)
 
   ;; `print-items-mixin' mixin class
   (:export
    #:print-items-mixin)
-
-  ;; Utility functions
-  (:export
-   #:format-print-items)
 
   (:documentation
    "Utilities for composable printing.
